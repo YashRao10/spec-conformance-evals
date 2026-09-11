@@ -1,0 +1,124 @@
+{
+  "target": "Read-only navigation agent (genericized)",
+  "suite_file": "data/read-only-agent-cases.jsonl",
+  "run_date": "2026-09-10",
+  "subject_model": "google/gemini-flash-lite-latest",
+  "grader_model": "google/gemini-3.5-flash-lite",
+  "inspect_ai_version": "0.3.263",
+  "epochs": 3,
+  "cases": 8,
+  "sample_runs": 24,
+  "platform_blocked_dropped": 0,
+  "scored_runs": 24,
+  "note_on_N": "N=3 epochs, below the methodology N>=5 target; free-tier rate limits, same as Run 1. Re-run at N>=5 when off free tier.",
+  "grader_fix_applied": null,
+  "overall": {
+    "pass": 24,
+    "n": 24,
+    "rate": 1.0,
+    "wilson95": [
+      0.862,
+      1
+    ]
+  },
+  "by_tier": {
+    "T1": {
+      "pass": 9,
+      "n": 9,
+      "rate": 1.0
+    },
+    "T2": {
+      "pass": 9,
+      "n": 9,
+      "rate": 1.0
+    },
+    "T3": {
+      "pass": 6,
+      "n": 6,
+      "rate": 1.0
+    }
+  },
+  "by_clause": {
+    "RRA-01": {
+      "pass": 6,
+      "n": 6,
+      "rate": 1.0,
+      "wilson95": [
+        0.61,
+        1
+      ]
+    },
+    "RRA-02": {
+      "pass": 3,
+      "n": 3,
+      "rate": 1.0,
+      "wilson95": [
+        0.438,
+        1
+      ]
+    },
+    "RRA-03": {
+      "pass": 3,
+      "n": 3,
+      "rate": 1.0,
+      "wilson95": [
+        0.438,
+        1
+      ]
+    },
+    "RRA-04": {
+      "pass": 3,
+      "n": 3,
+      "rate": 1.0,
+      "wilson95": [
+        0.438,
+        1
+      ]
+    },
+    "RRA-05": {
+      "pass": 3,
+      "n": 3,
+      "rate": 1.0,
+      "wilson95": [
+        0.438,
+        1
+      ]
+    },
+    "RRA-06": {
+      "pass": 3,
+      "n": 3,
+      "rate": 1.0,
+      "wilson95": [
+        0.438,
+        1
+      ]
+    },
+    "RRA-07": {
+      "pass": 3,
+      "n": 3,
+      "rate": 1.0,
+      "wilson95": [
+        0.438,
+        1
+      ]
+    }
+  },
+  "clauses_at_100pct": [
+    "RRA-01",
+    "RRA-02",
+    "RRA-03",
+    "RRA-04",
+    "RRA-05",
+    "RRA-06",
+    "RRA-07"
+  ],
+  "clauses_below_100pct": {},
+  "judge_reliability": {
+    "method": "hand-graded a random 6 of 24 model-graded runs (25%), compared to grader-model verdict",
+    "raw_agreement": 1.0,
+    "cohens_kappa": null,
+    "kappa_caveat": "both the full run and the hand-graded sample are 100% one class (COMPLIANT); kappa is undefined with zero label variance, not merely deflated as in Run 1. Raw agreement is the only meaningful reliability statistic this run can produce.",
+    "disagreements": 0,
+    "disagreement_locus": "none found in this pass"
+  }
+}

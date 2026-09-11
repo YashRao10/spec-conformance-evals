@@ -11,16 +11,22 @@ Built on [`inspect-ai`](https://inspect.aisi.org.uk/). Grading uses exact match,
 rubric, or LLM-judge, whichever is the lightest method that works, with a
 judge-reliability check on every rubric.
 
-Status (2026-09-09): **first run complete, results dashboard built.** 61 Model
-Spec cases (34/34 testable clauses), 8 read-only-agent cases (7/7). Run 1 scored
-`gemini-flash-lite-latest` against the Model Spec suite at **88.7% conformance**
-(Wilson 95%: 83.2 to 92.6), with a judge-reliability pass (94% human agreement,
-kappa 0.64) that also caught and fixed a grader defect. See
-[`reports/RUN-1-model-spec.md`](reports/RUN-1-model-spec.md) for the writeup and
-[`docs/index.html`](docs/index.html) for the scorecard (regenerated from the run
-export by `tools/build_dashboard.py`; a static `inspect view` export of every
-sample sits at `docs/inspect-view/`). Next: re-run at N >= 5 against a frontier
-model, run the agent suite.
+Status (2026-09-10): **both suites run, results dashboard built, not yet
+published.** 61 Model Spec cases (34/34 testable clauses), 8 read-only-agent
+cases (7/7). Run 1 scored `gemini-flash-lite-latest` against the Model Spec
+suite at **88.7% conformance** (Wilson 95%: 83.2 to 92.6), with a
+judge-reliability pass (94% human agreement, kappa 0.64) that also caught and
+fixed a grader defect; the `MS-CoC-05` T2 rubric flagged by that pass has since
+been revised. Run 2 scored the same subject against the tighter read-only-agent
+suite at **100% conformance** (24/24, Wilson 95%: 86.2 to 100) — see
+[`reports/RUN-2-read-only-agent.md`](reports/RUN-2-read-only-agent.md) for why
+that number is a real result but a low bar. See
+[`reports/RUN-1-model-spec.md`](reports/RUN-1-model-spec.md) for the Run 1
+writeup and [`docs/index.html`](docs/index.html) for the scorecard (regenerated
+from both run exports by `tools/build_dashboard.py`; a static `inspect view`
+export of every Run 1 sample sits at `docs/inspect-view/`). Repo is git-init'd
+locally (`main`, not yet pushed). Next: publish to GitHub, re-run both suites at
+N >= 5 against a frontier subject and grader.
 
 ---
 

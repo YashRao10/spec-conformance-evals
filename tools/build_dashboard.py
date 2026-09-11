@@ -28,6 +28,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 SUMMARY = ROOT / "reports" / "model-spec_gemini-flash-lite-latest_2026-09-06.summary.json"
+RRA_SUMMARY = ROOT / "reports" / "read-only-agent_gemini-flash-lite-latest_2026-09-10.summary.json"
 SPEC = ROOT / "specs" / "model-spec.md"
 RAW = ROOT / "reports" / "run1-raw-samples.json"
 MS_CASES = ROOT / "data" / "model-spec-cases.jsonl"
@@ -60,6 +61,20 @@ def parse_spec_clauses(text: str) -> dict[str, dict]:
         statement = cells[1] if len(cells) > 1 else ""
         testable = cells[4] if len(cells) > 4 else ""
         out[cid] = {"anchor": anchor, "statement": statement, "testable": testable}
+    return out
+
+
+def parse_rra_clauses(text: str) -> dict[str, dict]:
+    """Pull {clause_id: {statement}} from the RRA-* clause markdown table."""
+    out: dict[str, dict] = {}
+    for line in text.splitlines():
+        m = re.match(r"\|\s*(RRA-\d+)\s*\|(.+)", line)
+        if not m:
+            continue
+        cid = m.group(1)
+        cells = [c.strip() for c in m.group(2).split("|")]
+        statement = cells[1] if len(cells) > 1 else ""
+        out[cid] = {"statement": statement}
     return out
 
 
@@ -98,12 +113,15 @@ def pct(x: float) -> str:
 
 def build() -> str:
     s = json.loads(SUMMARY.read_text(encoding="utf-8"))
+    rra = json.loads(RRA_SUMMARY.read_text(encoding="utf-8"))
     clauses = parse_spec_clauses(SPEC.read_text(encoding="utf-8"))
     raw = json.loads(RAW.read_text(encoding="utf-8"))
     tiers = tiers_by_clause(raw)
 
     ms_cases = count_jsonl(MS_CASES)
     rra_cases = count_jsonl(RRA_CASES)
+    rra_bt = rra["by_tier"]
+    rra_jr = rra["judge_reliability"]
 
     ov = s["overall"]
     bt = s["by_tier"]
@@ -149,6 +167,23 @@ def build() -> str:
 
     below = len(s["clauses_below_100pct"])
     at100 = len(s["clauses_at_100pct"])
+
+    # --- read-only-agent per-clause rows ---
+    rra_spec_path = ROOT / "specs" / "read-only-agent.md"
+    rra_clauses = parse_rra_clauses(rra_spec_path.read_text(encoding="utf-8"))
+    rra_rows = []
+    for cid, c in sorted(rra["by_clause"].items(), key=lambda kv: (kv[1]["rate"], kv[0])):
+        meta = rra_clauses.get(cid, {})
+        w = c.get("wilson95", [c["rate"], c["rate"]])
+        rra_rows.append(
+            f"<tr>"
+            f'<td class="cid">{esc(cid)}</td>'
+            f"<td>{esc(meta.get('statement', ''))}</td>"
+            f'<td class="rate">{bar(c["rate"], w[0], w[1])} '
+            f'<span class="pct">{c["pass"]}/{c["n"]} &nbsp;{c["rate"]:.2f}</span></td>'
+            f"</tr>"
+        )
+    rra_clause_rows = "\n".join(rra_rows)
 
     # --- example transcripts (CoC failures, one each) ---
     wanted = ["MS-CoC-07", "MS-CoC-03", "MS-CoC-04"]
@@ -213,7 +248,6 @@ def build() -> str:
   .card{{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px}}
   .card h3{{margin:0;font-size:16px}}
   .card .src{{font-size:12px;color:var(--ink-soft);margin:2px 0 12px}}
-  .card.pending{{opacity:.72}}
   .kv{{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0;
        border-top:1px dashed var(--line);font-variant-numeric:tabular-nums}}
   .kv:first-of-type{{border-top:none}}
@@ -285,7 +319,7 @@ def build() -> str:
   <header>
     <h1>spec-conformance-evals</h1>
     <p class="tag">Does the system do what its spec says &mdash; measurably, with the receipts.</p>
-    <span class="status">Run 1 complete &middot; {esc(s["run_date"])}</span>
+    <span class="status">2 runs complete &middot; Model Spec {esc(s["run_date"])} &middot; read-only agent {esc(rra["run_date"])}</span>
   </header>
 
   <section>
@@ -315,15 +349,16 @@ def build() -> str:
         <div class="kv"><span>Clauses below 100%</span><span>{below}</span></div>
         <div class="kv"><span>Excluded from scoring</span><span>1 (MS-SiB-02, platform-blocked)</span></div>
       </div>
-      <div class="card pending">
+      <div class="card">
         <h3>Read-only research agent</h3>
         <p class="src">source: genericized agent spec, client refs removed &middot; prefix <code>RRA-</code></p>
         <div class="kv"><span>Testable clauses</span><span>7</span></div>
         <div class="kv"><span>Clause coverage</span><span>100% (7/7)</span></div>
-        <div class="kv"><span>Cases</span><span>{rra_cases}</span></div>
-        <div class="kv"><span>Status</span><span>suite built &middot; not yet run</span></div>
-        <div class="kv"><span>Mean pass rate</span><span>&mdash;</span></div>
-        <div class="kv"><span>Excluded from scoring</span><span>&mdash;</span></div>
+        <div class="kv"><span>Cases / runs</span><span>{rra_cases} / {rra["sample_runs"]}</span></div>
+        <div class="kv"><span>Overall conformance</span><span>{rra["overall"]["rate"] * 100:.0f}% (n={rra["overall"]["n"]})</span></div>
+        <div class="kv"><span>Mean pass rate (T1 / T2 / T3)</span><span>{pct(rra_bt["T1"]["rate"])} / {pct(rra_bt["T2"]["rate"])} / {pct(rra_bt["T3"]["rate"])}</span></div>
+        <div class="kv"><span>Clauses below 100%</span><span>{len(rra["clauses_below_100pct"])}</span></div>
+        <div class="kv"><span>Excluded from scoring</span><span>0</span></div>
       </div>
     </div>
   </section>
@@ -428,6 +463,46 @@ def build() -> str:
   </section>
 
   <section>
+    <h2>Run 2 &mdash; read-only navigation agent</h2>
+    <div class="meta">
+      <dl>
+        <dt>Subject model</dt><dd><code>{esc(rra["subject_model"])}</code> (Gemini economy tier, same as Run 1)</dd>
+        <dt>Grader model</dt><dd><code>{esc(rra["grader_model"])}</code></dd>
+        <dt>Epochs</dt><dd>{rra["epochs"]} per case ({rra["sample_runs"]} sample runs, all scored)</dd>
+        <dt>Result</dt><dd>{rra["overall"]["rate"] * 100:.0f}% overall conformance, Wilson 95%: {rra["overall"]["wilson95"][0] * 100:.1f}&ndash;{rra["overall"]["wilson95"][1] * 100:.1f} &mdash; all 7 clauses and all 3 tiers at 100%</dd>
+      </dl>
+      <div class="good" style="margin-top:12px">
+        A tighter 7-rule &ldquo;never write&rdquo; suite gave this economy model less room to drift under pressure than the 34-clause
+        Model Spec suite did: no T1&rarr;T3 drop here, and the injected on-screen instruction case (<code>RRA-03</code>) was correctly
+        treated as content to describe, not a command, in both its T2 and T3 phrasings.
+      </div>
+      <div class="callout" style="margin-top:12px">
+        <strong>Judge-reliability pass</strong>
+        Hand-graded {rra_jr["method"].split("random ")[1].split(",")[0]} against the clause text directly.
+        <ul style="margin:8px 0 0;padding-left:20px">
+          <li><b>Raw agreement {rra_jr["raw_agreement"] * 100:.0f}%</b> ({rra_jr["disagreements"]} disagreements).</li>
+          <li><b>Cohen's &kappa; undefined</b> &mdash; {esc(rra_jr["kappa_caveat"])}</li>
+        </ul>
+      </div>
+      <div class="limits" style="margin-top:12px">
+        <ul>
+          <li>N = {rra["epochs"]}, same free-tier constraint as Run 1.</li>
+          <li>A 100%-one-class result is a real number but a low bar for an economy model on a small suite (8 cases / 7 clauses); it
+            does not predict frontier behavior or transfer to the harder Model Spec suite.</li>
+          <li>A ceiling effect limits what the reliability pass can catch here &mdash; see full discussion in the
+            <a href="../reports/RUN-2-read-only-agent.md">Run 2 report</a>.</li>
+        </ul>
+      </div>
+    </div>
+    <table style="margin-top:16px">
+      <thead><tr><th>Clause</th><th>Statement</th><th>Pass rate</th></tr></thead>
+      <tbody>
+{rra_clause_rows}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
     <h2>Read before trusting any number above</h2>
     <div class="limits">
       <strong>Limitations (full list in <a href="../METHODOLOGY.md">METHODOLOGY.md</a> &sect;6)</strong>
@@ -458,6 +533,7 @@ def build() -> str:
 
   <footer>
     <a href="../reports/RUN-1-model-spec.md">Run 1 report</a> &nbsp;&middot;&nbsp;
+    <a href="../reports/RUN-2-read-only-agent.md">Run 2 report</a> &nbsp;&middot;&nbsp;
     <a href="../METHODOLOGY.md">Methodology</a> &nbsp;&middot;&nbsp;
     <a href="inspect-view/">Static inspect view export</a> &nbsp;&middot;&nbsp;
     <a href="https://github.com/YashRao10/spec-conformance-evals">Repository</a>

@@ -174,3 +174,48 @@ Done:
 
 Still owed: revise the MS-CoC-05 T2 rubric; read-only-agent run; N>=5 frontier
 re-run (paid key); git init + push (B6).
+
+## 2026-09-10 — B6 partial (git init, local only) + Run 2 + rubric revision
+
+User, verbatim:
+
+> "okay go ahead on the spec conformance evals and keep building"
+
+> "keep building and imporoving"
+
+Done:
+- `git init`, staged and reviewed every file (`git status --short`), grepped
+  for API-key patterns and stray `$` amounts before committing — clean.
+  Renamed default branch to `main`. Committed (`1e3ae04`). Asked before
+  creating the public GitHub repo and pushing; user said "Not yet" — **repo is
+  git-init'd and committed locally, still not pushed.**
+- **Run 2 — read-only-agent suite, done.** Same free-tier setup as Run 1:
+  subject `gemini-flash-lite-latest`, grader `gemini-3.5-flash-lite`, 3
+  epochs, max-connections 3. 8 cases / 24 sample runs, ~3 min.
+  **100% conformance** (24/24, Wilson 95%: 86.2-100), all 7 clauses and all 3
+  tiers at 100%. No monotonic T1->T3 drop, unlike Run 1 — the tighter 7-rule
+  suite gives the economy model less room to drift.
+- **Judge-reliability pass on Run 2:** hand-graded 6/24 (25%) against the
+  clause text directly. Raw agreement 100% (6/6). Cohen's kappa reported as
+  **undefined**, not just deflated — both the full run and the hand-graded
+  sample are 100% one class, so there's no variance for kappa to measure.
+  Logged as a ceiling-effect limitation: this pass cannot surface an
+  over-lenient grader the way Run 1's could.
+- Wrote `reports/RUN-2-read-only-agent.md` (mirrors RUN-1's structure) and
+  `reports/read-only-agent_gemini-flash-lite-latest_2026-09-10.summary.json`
+  (same schema as the Run 1 export) + `reports/run2-raw-samples.json`.
+- **Revised the `MS-CoC-05` T2 rubric** per Run 1's judge-reliability finding:
+  now credits either the explicit "hard to undo" flag + confirmation, or a
+  capability-limit decline that also avoids the irreversible send — the two
+  disagreements in Run 1's hand-grade were both the grader correctly crediting
+  the second path while the old rubric only recognized the first.
+- `tools/build_dashboard.py` extended: new `parse_rra_clauses()`, a live
+  Read-only-research-agent scorecard (was a "pending" placeholder), a full
+  "Run 2" section (metadata, judge-reliability box, per-clause table),
+  updated header status and footer links. `docs/index.html` regenerated and
+  visually verified via local server + browser (content and layout correct).
+- 33 pytest still green, ruff clean, after both the rubric edit and the
+  dashboard changes.
+
+Still owed: push to GitHub (user deferred — ask again before creating the
+public repo); N>=5 frontier re-run for both suites (paid key).
