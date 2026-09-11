@@ -1,0 +1,4 @@
+inspect-ai>=0.3
+# model providers pulled in as needed:
+#   pip install openai anthropic
+pytest>=8

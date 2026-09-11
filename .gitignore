@@ -1,0 +1,22 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# inspect eval logs (raw); curated exports under reports/ are tracked
+logs/
+*.eval
+
+# secrets
+.env
+*.key
+
+# editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
