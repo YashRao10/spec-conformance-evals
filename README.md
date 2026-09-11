@@ -11,22 +11,35 @@ Built on [`inspect-ai`](https://inspect.aisi.org.uk/). Grading uses exact match,
 rubric, or LLM-judge, whichever is the lightest method that works, with a
 judge-reliability check on every rubric.
 
-Status (2026-09-10): **both suites run, results dashboard built, not yet
-published.** 61 Model Spec cases (34/34 testable clauses), 8 read-only-agent
-cases (7/7). Run 1 scored `gemini-flash-lite-latest` against the Model Spec
-suite at **88.7% conformance** (Wilson 95%: 83.2 to 92.6), with a
-judge-reliability pass (94% human agreement, kappa 0.64) that also caught and
-fixed a grader defect; the `MS-CoC-05` T2 rubric flagged by that pass has since
-been revised. Run 2 scored the same subject against the tighter read-only-agent
-suite at **100% conformance** (24/24, Wilson 95%: 86.2 to 100) — see
-[`reports/RUN-2-read-only-agent.md`](reports/RUN-2-read-only-agent.md) for why
-that number is a real result but a low bar. See
-[`reports/RUN-1-model-spec.md`](reports/RUN-1-model-spec.md) for the Run 1
-writeup and [`docs/index.html`](docs/index.html) for the scorecard (regenerated
-from both run exports by `tools/build_dashboard.py`; a static `inspect view`
+Status (2026-09-11): **both suites run, results dashboard built, not yet
+published.** 61 Model Spec cases (34/34 testable clauses), 12 read-only-agent
+cases (7/7 clauses — 8 original + 4 new compound-tension T3 cases). Run 1
+scored `gemini-flash-lite-latest` against the Model Spec suite at **88.7%
+conformance** (Wilson 95%: 83.2 to 92.6), with a judge-reliability pass (94%
+human agreement, kappa 0.64) that also caught and fixed a grader defect; the
+`MS-CoC-05` T2 rubric flagged by that pass has since been revised. Run 2 scored
+the same subject against the read-only-agent suite at **100% conformance**
+(24/24, Wilson 95%: 86.2 to 100) — a real result but a low bar (N=3, economy
+model, no monotonic tier drop). Run 3 (2026-09-11) expanded that suite with 4
+new cases that each combine two rules under one tension, re-ran the whole
+suite at **N=5** (60/60, 100% automated), and this time the judge-reliability
+pass — hand-grading 70% of the new cases' runs — found the ceiling effect
+crack: a real grader hallucination (a false "the model hedged" justification
+for a response that had, in fact, confidently invented a specific button name)
+and a rubric under-specification (a "closes the form" requirement satisfied by
+responses that never closed the form). Raw hand-grade agreement came in at
+71.4%, not the 100% the automated score implied. Both rubrics have been
+revised; a re-run against them is the immediate next step. See
+[`reports/RUN-3-read-only-agent-expanded.md`](reports/RUN-3-read-only-agent-expanded.md)
+for the full finding, [`reports/RUN-2-read-only-agent.md`](reports/RUN-2-read-only-agent.md)
+and [`reports/RUN-1-model-spec.md`](reports/RUN-1-model-spec.md) for the earlier
+runs, and [`docs/index.html`](docs/index.html) for the scorecard (regenerated
+from all three run exports by `tools/build_dashboard.py`; a static `inspect view`
 export of every Run 1 sample sits at `docs/inspect-view/`). Repo is git-init'd
-locally (`main`, not yet pushed). Next: publish to GitHub, re-run both suites at
-N >= 5 against a frontier subject and grader.
+locally (`main`, not yet pushed). Next: re-run the 2 flagged compound cases
+against their revised rubrics, publish to GitHub, re-run both suites at N >= 5
+against a frontier subject *and grader* (Run 3 raises the stakes on the grader
+half of that).
 
 ---
 
