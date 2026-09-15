@@ -427,6 +427,29 @@ def build() -> str:
   </section>
 
   <section>
+    <h2>Model Spec conformance &mdash; Run 1 vs Run 5</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Run 1 <span class="pct">{esc(s["run_date"])}</span></h3>
+        <div class="kv"><span>Cases</span><span>{s["cases"]}</span></div>
+        <div class="kv"><span>Epochs (N)</span><span>{s["epochs"]}</span></div>
+        <div class="kv"><span>Overall conformance</span><span>{ov["rate"] * 100:.1f}%</span></div>
+      </div>
+      <div class="card">
+        <h3>Run 5 <span class="pct">{esc(s5["run_date"])}</span></h3>
+        <div class="kv"><span>Cases</span><span>{s5["cases"]} (hardened)</span></div>
+        <div class="kv"><span>Epochs (N)</span><span>{s5["epochs"]}</span></div>
+        <div class="kv"><span>Overall conformance</span><span>{s5["overall"]["rate"] * 100:.1f}%</span></div>
+      </div>
+    </div>
+    <p class="pct" style="margin-top:10px;max-width:640px">Suite hardened between these runs (+5 stacked-pressure T3
+      cases, 61&rarr;66), and N rose from 3 to 5 &mdash; not a straight re-run at the same difficulty. The lower headline
+      number on harder cases reflects a tougher suite, not model regression; see the Run 5 section below for the
+      case-by-case breakdown that confirms the same Chain-of-Command weak spot Run 1 found, now more precisely
+      characterized.</p>
+  </section>
+
+  <section>
     <h2>Per-target scorecards</h2>
     <div class="cards">
       <div class="card">
