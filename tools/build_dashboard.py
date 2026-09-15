@@ -8,7 +8,8 @@ Inputs (all committed):
   reports/<target>_<model>_<date>.summary.json   the curated run export
   specs/model-spec.md                            clause statements + anchors
   data/*.jsonl                                   suite sizes / tier coverage
-  reports/run1-raw-samples.json                  a few example transcripts
+  reports/run1-raw-samples.json                  a few example transcripts (Run 1)
+  reports/run5-raw-samples.json                  a few example transcripts (Run 5)
 
 Output:
   docs/index.html
@@ -36,6 +37,7 @@ RRA_SUMMARY_RUN4 = ROOT / "reports" / "read-only-agent_gemini-flash-lite-latest_
 SUMMARY_RUN5 = ROOT / "reports" / "model-spec_gemini-flash-lite-latest_2026-09-14.summary.json"
 SPEC = ROOT / "specs" / "model-spec.md"
 RAW = ROOT / "reports" / "run1-raw-samples.json"
+RAW5 = ROOT / "reports" / "run5-raw-samples.json"
 MS_CASES = ROOT / "data" / "model-spec-cases.jsonl"
 RRA_CASES = ROOT / "data" / "read-only-agent-cases.jsonl"
 OUT = ROOT / "docs" / "index.html"
@@ -122,6 +124,7 @@ def build() -> str:
     rra2 = json.loads(RRA_SUMMARY_RUN2.read_text(encoding="utf-8"))  # Run 2 = historical record
     clauses = parse_spec_clauses(SPEC.read_text(encoding="utf-8"))
     raw = json.loads(RAW.read_text(encoding="utf-8"))
+    raw5 = json.loads(RAW5.read_text(encoding="utf-8"))
     tiers = tiers_by_clause(raw)
 
     ms_cases = count_jsonl(MS_CASES)
@@ -237,6 +240,24 @@ def build() -> str:
         f"<p class='xl'>Grader</p><pre>{esc(r['grader_expl'])}</pre>"
         f"</details>"
         for r in examples
+    )
+
+    # --- Run 5 example transcripts (new findings, one each) ---
+    wanted5 = ["MS-SiB-12", "MS-DBW-01"]
+    examples5 = []
+    for cid in wanted5:
+        for r in raw5:
+            if r["clause_id"] == cid and r["verdict"] == "I":
+                examples5.append(r)
+                break
+    ex_html5 = "\n".join(
+        f"<details class='xcript'><summary><code>{esc(r['clause_id'])}</code> "
+        f"<span class='tb'>{esc(r['tier'])}</span> &mdash; {esc(clauses.get(r['clause_id'], {}).get('statement',''))}</summary>"
+        f"<p class='xl'>Prompt</p><pre>{esc(r['input'])}</pre>"
+        f"<p class='xl'>Model response</p><pre>{esc(r['response'][:700])}{'&hellip;' if len(r['response'])>700 else ''}</pre>"
+        f"<p class='xl'>Grader</p><pre>{esc(r['explanation'])}</pre>"
+        f"</details>"
+        for r in examples5
     )
 
     generated = date.today().isoformat()
@@ -772,6 +793,13 @@ def build() -> str:
 {clause_rows5}
       </tbody>
     </table>
+  </section>
+
+  <section>
+    <h2>Run 5 &mdash; example failures, transcripts</h2>
+    <p class="pct" style="margin-bottom:12px">Two of Run 5's new findings (not present in the Run 1 suite), verbatim.
+      Prompt, model response, and the grader&rsquo;s recorded reasoning.</p>
+{ex_html5}
   </section>
 
   <section>
