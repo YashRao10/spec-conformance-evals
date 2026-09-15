@@ -245,6 +245,9 @@ def build() -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>spec-conformance-evals &mdash; results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,500&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{{
     color-scheme: light;
@@ -255,8 +258,9 @@ def build() -> str:
     --pass-text:#006300; --grid:#eef0f2;
     --seq-100:#cde2fb; --seq-300:#6da7ec; --seq-500:#256abf; --seq-700:#0d366b;
     --border-hair:rgba(11,11,11,0.10);
-    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --mono:"IBM Plex Mono","SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
     --sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Newsreader",ui-serif,Georgia,"Times New Roman",serif;
   }}
   @media (prefers-color-scheme: dark){{
     :root:not([data-theme="light"]){{
@@ -292,20 +296,25 @@ def build() -> str:
   header::after{{content:"";position:absolute;inset:0;
        background:radial-gradient(ellipse 480px 220px at 88% -10%,rgba(255,255,255,.16),transparent 70%)}}
   header .inner{{max-width:1040px;margin:0 auto;position:relative}}
-  header h1{{font-size:30px;margin:0 0 6px;letter-spacing:-0.015em;font-weight:700}}
-  header .tag{{color:rgba(255,255,255,.78);font-size:16px;margin:0 0 16px;max-width:560px}}
-  .status{{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;
-       letter-spacing:.07em;background:rgba(255,255,255,.14);color:#fff;
+  header h1{{font-family:var(--serif);font-size:44px;margin:0 0 8px;letter-spacing:-0.01em;
+       font-weight:600}}
+  header .tag{{font-family:var(--serif);font-style:italic;color:rgba(255,255,255,.82);
+       font-size:19px;margin:0 0 18px;max-width:560px;font-weight:500}}
+  .status{{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;
+       text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.14);color:#fff;
        border:1px solid rgba(255,255,255,.22);padding:5px 10px;border-radius:20px}}
   .lbl{{font-size:11px;text-transform:uppercase;letter-spacing:.08em;
        color:var(--ink-mute);font-weight:700}}
 
-  section{{margin-top:40px}}
+  .wrap{{counter-reset:sec}}
+  section{{margin-top:48px;counter-increment:sec}}
   section > h2{{font-size:13px;text-transform:uppercase;letter-spacing:.09em;
        color:var(--ink-soft);border-bottom:1px solid var(--line);font-weight:700;
-       padding-bottom:8px;margin:0 0 18px;display:flex;align-items:center;gap:8px}}
-  section > h2::before{{content:"";width:9px;height:9px;border-radius:2px;background:var(--accent);
-       flex:none}}
+       padding-bottom:9px;margin:0 0 18px;display:flex;align-items:baseline;gap:10px}}
+  section > h2::before{{content:counter(sec,decimal-leading-zero);flex:none;
+       font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent);
+       letter-spacing:.03em;background:color-mix(in srgb, var(--accent) 14%, transparent);
+       border-radius:4px;padding:2px 6px}}
 
   .tiles{{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}}
   .tile{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 16px 15px;
