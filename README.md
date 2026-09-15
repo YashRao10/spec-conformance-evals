@@ -119,8 +119,9 @@ docs/      index.html   results dashboard (Pages site), generated
 ## Use
 
 ```bash
-pip install -r requirements.txt          # inspect-ai + pytest
+pip install -r requirements.txt          # inspect-ai + pytest + ruff
 pip install openai anthropic             # whichever provider(s) you target
+make install-hooks                       # pre-push: ruff + pytest, blocks on failure
 
 pytest -q                                # helper + suite-integrity checks (no key)
 python tools/coverage_report.py          # clause coverage, per target

@@ -1,0 +1,25 @@
+#!/bin/sh
+# Local pre-push check: ruff lint + pytest. Blocks the push on failure.
+# Installed via `make install-hooks` (symlinked into .git/hooks/pre-push).
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+if [ -x .venv/bin/ruff ]; then
+    RUFF=.venv/bin/ruff
+else
+    RUFF=ruff
+fi
+
+if [ -x .venv/bin/pytest ]; then
+    PYTEST=.venv/bin/pytest
+else
+    PYTEST=pytest
+fi
+
+echo "pre-push: running ruff..."
+"$RUFF" check .
+
+echo "pre-push: running pytest..."
+"$PYTEST"
