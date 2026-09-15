@@ -723,7 +723,7 @@ def build() -> str:
       </table>
       <div class="limits" style="margin-top:12px">
         <ul>
-          {"".join(f"<li>{esc(l)}</li>" for l in rra4["limitations_specific_to_this_run"])}
+          {"".join(f"<li>{esc(lim)}</li>" for lim in rra4["limitations_specific_to_this_run"])}
         </ul>
       </div>
     </div>
@@ -761,7 +761,7 @@ def build() -> str:
       </div>
       <div class="limits" style="margin-top:12px">
         <ul>
-          {"".join(f"<li>{esc(l)}</li>" for l in s5["limitations_specific_to_this_run"])}
+          {"".join(f"<li>{esc(lim)}</li>" for lim in s5["limitations_specific_to_this_run"])}
         </ul>
       </div>
     </div>
