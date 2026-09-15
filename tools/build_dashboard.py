@@ -319,7 +319,7 @@ def build() -> str:
   a{{color:var(--accent);text-decoration:none}} a:hover{{text-decoration:underline}}
   code{{font-family:var(--mono);font-size:.9em}}
 
-  header{{background:linear-gradient(150deg,#060a14 0%,#0d2547 38%,#1c4d8f 72%,var(--accent) 115%);
+  header{{background:linear-gradient(155deg,var(--ink) 0%,#12294a 55%,var(--accent) 130%);
        margin:0 -20px 40px;padding:44px 20px 34px;color:#fff;position:relative;overflow:hidden}}
   header::after{{content:"";position:absolute;inset:0;
        background:radial-gradient(ellipse 480px 220px at 88% -10%,rgba(255,255,255,.16),transparent 70%)}}
