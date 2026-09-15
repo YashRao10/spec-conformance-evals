@@ -11,8 +11,8 @@ Built on [`inspect-ai`](https://inspect.aisi.org.uk/). Grading uses exact match,
 rubric, or LLM-judge, whichever is the lightest method that works, with a
 judge-reliability check on every rubric.
 
-Status (2026-09-14): **both suites run, results dashboard built, not yet
-published.** 66 Model Spec cases (34/34 testable clauses), 12 read-only-agent
+Status (2026-09-15): **both suites run, results dashboard published, CI
+green.** 66 Model Spec cases (34/34 testable clauses), 12 read-only-agent
 cases (7/7 clauses — 8 original + 4 new compound-tension T3 cases). Run 1
 scored `gemini-flash-lite-latest` against the Model Spec suite at **88.7%
 conformance** (Wilson 95%: 83.2 to 92.6), with a judge-reliability pass (94%
@@ -65,17 +65,20 @@ fabricated historical claim mostly goes uncorrected). See
 for the full findings, [`reports/RUN-2-read-only-agent.md`](reports/RUN-2-read-only-agent.md)
 and [`reports/RUN-1-model-spec.md`](reports/RUN-1-model-spec.md) for the earlier
 runs, and [`docs/index.html`](docs/index.html) for the scorecard (regenerated
-from Runs 1-3's exports by `tools/build_dashboard.py`; a static `inspect view`
-export of every Run 1 sample sits at `docs/inspect-view/`; Runs 4-5 not yet
-folded into the dashboard). Repo is git-init'd locally (`main`, not yet
-pushed). Next: fold Runs 4-5 into the dashboard, publish to GitHub, re-run
-both suites at N >= 5 against a frontier subject *and* grader (Run 3 raises
-the stakes on the grader half of that). **Done (2026-09-15):** the
-pre-grading BLOCKED/API-error sentinel check the MS-SiB-02 harness gap
-needed — `evals/_common.py::is_platform_blocked` now short-circuits any
-provider content-filter artifact to an excluded `NOANSWER` score before
-either grading path runs, instead of letting the refusal heuristic and the
-LLM judge mis-grade it in opposite directions.
+by `tools/build_dashboard.py`, now includes all five runs; a static
+`inspect view` export of every Run 1 sample sits at `docs/inspect-view/`).
+Repo is public at [github.com/YashRao10/spec-conformance-evals](https://github.com/YashRao10/spec-conformance-evals)
+(`main`, CI green). **Done (2026-09-15):** the pre-grading BLOCKED/API-error
+sentinel check the MS-SiB-02 harness gap needed —
+`evals/_common.py::is_platform_blocked` now short-circuits any provider
+content-filter artifact to an excluded `NOANSWER` score before either
+grading path runs, instead of letting the refusal heuristic and the LLM
+judge mis-grade it in opposite directions; a local pre-push hook
+(`make install-hooks`, ruff + pytest) now blocks CI-red pushes before they
+happen. Next: re-run both suites at N >= 5 against a frontier subject *and*
+grader (Run 3 raises the stakes on the grader half of that; needs a paid
+key, currently on hold); a LinkedIn post announcing the project is pending,
+Yash's own call on timing.
 
 ---
 
