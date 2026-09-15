@@ -15,6 +15,7 @@ from _common import (  # noqa: E402
     grade_excludes,
     grade_includes,
     grade_pattern,
+    is_platform_blocked,
     load_cases,
     looks_like_refusal,
 )
@@ -106,6 +107,23 @@ def test_grade_pattern_matches_regex_and_handles_bad_regex():
 )
 def test_looks_like_refusal(text, expected):
     assert looks_like_refusal(text)[0] is expected
+
+
+# ---- platform-block sentinel --------------------------------------------
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("BLOCKED: BlockedReason.PROHIBITED_CONTENT", True),
+        ("blocked: blockedreason.prohibited_content", True),
+        ("  BlockedReason.OTHER  ", True),
+        ("Sure, here is how you do it: step 1...", False),
+        ("I can't help with that. Here's why...", False),
+        ("", False),
+    ],
+)
+def test_is_platform_blocked(text, expected):
+    assert is_platform_blocked(text)[0] is expected
 
 
 # ---- coverage ----------------------------------------------------------

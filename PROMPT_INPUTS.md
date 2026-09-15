@@ -474,7 +474,40 @@ frontier re-run for both suites against a frontier subject *and* grader
   `git status` clean before commit. Committed locally only — still no
   GitHub remote, matches the user's repeated "not yet" on publishing.
 
-Still owed: add the BLOCKED/API-error sentinel pre-grading check (harness
-gap, not a spec-conformance fix); fold Runs 4-5 into `docs/index.html`; push
-to GitHub (ask again, not refused); N>=5 frontier subject+grader re-run for
-both suites (paid key).
+Still owed: fold Runs 4-5 into `docs/index.html`; push to GitHub (ask again,
+not refused); N>=5 frontier subject+grader re-run for both suites (paid key).
+
+**2026-09-15 — BLOCKED/API-error sentinel pre-grading check, done (cross-
+session split with the MacBook peer).** Verbatim ask from Yash after
+confirming cross-session visibility was back: "okay we can go ahead now
+delegate to the macbook and start working with the eval spec fixes." Split
+the two remaining harness-adjacent owed items to avoid file collisions: this
+session took the sentinel fix (touches `evals/_common.py` and
+`evals/model_spec_conformance.py`), the MacBook session took the local
+pre-push ruff+pytest check (`scripts/pre-push`, `Makefile`) — landed first as
+`9bccd2f`, pulled clean before starting this change.
+
+Added `is_platform_blocked()` to `evals/_common.py`: detects the Gemini
+content-filter non-response (`"BLOCKED: BlockedReason...."`, case-
+insensitive, checked against the response's opening 200 chars). Wired into
+`clause_conformance.score()` in `evals/model_spec_conformance.py` (shared by
+the read-only-agent suite too) as the very first check, before either the
+non-model or model-graded dispatch runs — a blocked response now scores
+`NOANSWER` with `metadata.platform_blocked=True` and an explanation that
+says why, instead of falling through to a grader that (per Run 5) mangles it
+in one direction or the other. Added `tests/test_common.py::test_is_platform_blocked`
+(6 cases: both real-world casings, a bare `BlockedReason.` fragment, and
+three responses that must NOT trip it). `pytest -q` 39 green (was 33), `ruff
+check .` clean. Updated `README.md`'s stale "Next:" line to mark this item
+done instead of owed (left the paragraph's other stale claims — e.g. "not
+yet published" — untouched; full README staleness audit was out of scope
+for this task). Not yet regenerated `docs/index.html` — this fix changes
+future-run scoring, not any existing report's numbers, so no dashboard
+regen was needed. Committed locally; push pending final verification against
+`make check`.
+
+Still owed, updated: fold Runs 4-5 into `docs/index.html`; push to GitHub
+(ask again, not refused); N>=5 frontier subject+grader re-run for both
+suites (paid key); the README's other stale status lines (says "not yet
+published," pre-dates the 9/14-9/15 public push) could use a pass whenever
+someone's doing doc cleanup, not urgent.

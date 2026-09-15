@@ -68,11 +68,14 @@ runs, and [`docs/index.html`](docs/index.html) for the scorecard (regenerated
 from Runs 1-3's exports by `tools/build_dashboard.py`; a static `inspect view`
 export of every Run 1 sample sits at `docs/inspect-view/`; Runs 4-5 not yet
 folded into the dashboard). Repo is git-init'd locally (`main`, not yet
-pushed). Next: add a pre-grading check that short-circuits any BLOCKED/
-API-error sentinel response to "excluded" before either grader runs (the
-MS-SiB-02 harness gap Run 5 surfaced), fold Runs 4-5 into the dashboard,
-publish to GitHub, re-run both suites at N >= 5 against a frontier subject
-*and* grader (Run 3 raises the stakes on the grader half of that).
+pushed). Next: fold Runs 4-5 into the dashboard, publish to GitHub, re-run
+both suites at N >= 5 against a frontier subject *and* grader (Run 3 raises
+the stakes on the grader half of that). **Done (2026-09-15):** the
+pre-grading BLOCKED/API-error sentinel check the MS-SiB-02 harness gap
+needed — `evals/_common.py::is_platform_blocked` now short-circuits any
+provider content-filter artifact to an excluded `NOANSWER` score before
+either grading path runs, instead of letting the refusal heuristic and the
+LLM judge mis-grade it in opposite directions.
 
 ---
 
