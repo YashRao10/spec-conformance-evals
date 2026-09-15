@@ -247,99 +247,144 @@ def build() -> str:
 <title>spec-conformance-evals &mdash; results</title>
 <style>
   :root{{
-    --bg:#f6f7f8; --panel:#ffffff; --ink:#1a1d21; --ink-soft:#5b6570;
-    --line:#e2e5e9; --accent:#1f6feb; --pass:#1a7f5a; --warn:#b26b00;
-    --fail:#b3261e; --grid:#eef0f2;
+    color-scheme: light;
+    --bg:#f9f9f7; --panel:#fcfcfb; --ink:#0b0b0b; --ink-soft:#52514e;
+    --ink-mute:#898781; --line:#e1e0d9; --baseline:#c3c2b7;
+    --accent:#2a78d6; --accent-2:#eb6834; --accent-3:#1baf7a; --accent-4:#eda100; --accent-5:#e87ba4;
+    --pass:#0ca30c; --warn:#fab219; --fail:#d03b3b;
+    --pass-text:#006300; --grid:#eef0f2;
+    --seq-100:#cde2fb; --seq-300:#6da7ec; --seq-500:#256abf; --seq-700:#0d366b;
+    --border-hair:rgba(11,11,11,0.10);
     --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }}
+  @media (prefers-color-scheme: dark){{
+    :root:not([data-theme="light"]){{
+      color-scheme: dark;
+      --bg:#0d0d0d; --panel:#161615; --ink:#ffffff; --ink-soft:#c3c2b7;
+      --ink-mute:#898781; --line:#2c2c2a; --baseline:#383835;
+      --accent:#3987e5; --accent-2:#d95926; --accent-3:#199e70; --accent-4:#c98500; --accent-5:#d55181;
+      --pass:#0ca30c; --warn:#fab219; --fail:#e66767;
+      --pass-text:#0ca30c; --grid:#232322;
+      --seq-100:#184f95; --seq-300:#256abf; --seq-500:#5598e7; --seq-700:#9ec5f4;
+      --border-hair:rgba(255,255,255,0.10);
+    }}
+  }}
+  :root[data-theme="dark"]{{
+      color-scheme: dark;
+      --bg:#0d0d0d; --panel:#161615; --ink:#ffffff; --ink-soft:#c3c2b7;
+      --ink-mute:#898781; --line:#2c2c2a; --baseline:#383835;
+      --accent:#3987e5; --accent-2:#d95926; --accent-3:#199e70; --accent-4:#c98500; --accent-5:#d55181;
+      --pass:#0ca30c; --warn:#fab219; --fail:#e66767;
+      --pass-text:#0ca30c; --grid:#232322;
+      --seq-100:#184f95; --seq-300:#256abf; --seq-500:#5598e7; --seq-700:#9ec5f4;
+      --border-hair:rgba(255,255,255,0.10);
   }}
   *{{box-sizing:border-box}}
   body{{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-       line-height:1.5;font-size:15px}}
-  .wrap{{max-width:980px;margin:0 auto;padding:32px 20px 72px}}
+       line-height:1.55;font-size:15px}}
+  .wrap{{max-width:1040px;margin:0 auto;padding:0 20px 80px}}
   a{{color:var(--accent);text-decoration:none}} a:hover{{text-decoration:underline}}
-  code{{font-family:var(--mono);font-size:.92em}}
+  code{{font-family:var(--mono);font-size:.9em}}
 
-  header h1{{font-size:25px;margin:0 0 4px;letter-spacing:-0.01em}}
-  header .tag{{color:var(--ink-soft);font-size:15px;margin:0 0 12px}}
-  .status{{display:inline-block;font-size:12px;font-weight:600;text-transform:uppercase;
-       letter-spacing:.06em;background:#e5f0e9;color:var(--pass);
-       padding:3px 8px;border-radius:4px}}
+  header{{background:linear-gradient(155deg,var(--ink) 0%,#12294a 55%,var(--accent) 130%);
+       margin:0 -20px 40px;padding:44px 20px 34px;color:#fff;position:relative;overflow:hidden}}
+  header::after{{content:"";position:absolute;inset:0;
+       background:radial-gradient(ellipse 480px 220px at 88% -10%,rgba(255,255,255,.16),transparent 70%)}}
+  header .inner{{max-width:1040px;margin:0 auto;position:relative}}
+  header h1{{font-size:30px;margin:0 0 6px;letter-spacing:-0.015em;font-weight:700}}
+  header .tag{{color:rgba(255,255,255,.78);font-size:16px;margin:0 0 16px;max-width:560px}}
+  .status{{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;
+       letter-spacing:.07em;background:rgba(255,255,255,.14);color:#fff;
+       border:1px solid rgba(255,255,255,.22);padding:5px 10px;border-radius:20px}}
   .lbl{{font-size:11px;text-transform:uppercase;letter-spacing:.08em;
-       color:var(--ink-soft);font-weight:600}}
+       color:var(--ink-mute);font-weight:700}}
 
-  section{{margin-top:38px}}
-  section > h2{{font-size:13px;text-transform:uppercase;letter-spacing:.08em;
-       color:var(--ink-soft);border-bottom:1px solid var(--line);
-       padding-bottom:6px;margin:0 0 16px}}
+  section{{margin-top:40px}}
+  section > h2{{font-size:13px;text-transform:uppercase;letter-spacing:.09em;
+       color:var(--ink-soft);border-bottom:1px solid var(--line);font-weight:700;
+       padding-bottom:8px;margin:0 0 18px;display:flex;align-items:center;gap:8px}}
+  section > h2::before{{content:"";width:9px;height:9px;border-radius:2px;background:var(--accent);
+       flex:none}}
 
-  .tiles{{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}}
-  .tile{{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}}
-  .tile .num{{font-size:25px;font-weight:650;font-variant-numeric:tabular-nums;margin-top:6px}}
-  .tile .sub{{font-size:12px;color:var(--ink-soft);margin-top:2px}}
+  .tiles{{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}}
+  .tile{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 16px 15px;
+       box-shadow:0 8px 24px -12px rgba(0,0,0,.28);border-top:3px solid var(--accent)}}
+  .tile:nth-child(2){{border-top-color:var(--accent-3)}}
+  .tile:nth-child(3){{border-top-color:var(--accent-4)}}
+  .tile:nth-child(4){{border-top-color:var(--accent-5)}}
+  .tile .num{{font-size:29px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:6px;
+       letter-spacing:-0.01em}}
+  .tile .sub{{font-size:12px;color:var(--ink-mute);margin-top:3px}}
 
-  .cards{{display:grid;grid-template-columns:1fr 1fr;gap:14px}}
-  .card{{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px}}
-  .card h3{{margin:0;font-size:16px}}
-  .card .src{{font-size:12px;color:var(--ink-soft);margin:2px 0 12px}}
-  .kv{{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0;
+  .cards{{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
+  .card{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}}
+  .card h3{{margin:0;font-size:16.5px;font-weight:700}}
+  .card .src{{font-size:12px;color:var(--ink-mute);margin:3px 0 14px}}
+  .kv{{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:5px 0;
        border-top:1px dashed var(--line);font-variant-numeric:tabular-nums}}
   .kv:first-of-type{{border-top:none}}
-  .kv span:last-child{{text-align:right}}
+  .kv span:last-child{{text-align:right;font-weight:600}}
 
-  .meta{{background:var(--panel);border:1px solid var(--line);border-radius:8px;
-       padding:14px 16px;font-size:13px}}
-  .meta dl{{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0}}
-  .meta dt{{color:var(--ink-soft)}} .meta dd{{margin:0;font-variant-numeric:tabular-nums}}
+  .meta{{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+       padding:16px 18px;font-size:13px}}
+  .meta dl{{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;margin:0}}
+  .meta dt{{color:var(--ink-mute)}} .meta dd{{margin:0;font-variant-numeric:tabular-nums}}
 
   table{{width:100%;border-collapse:collapse;font-size:13px}}
-  th,td{{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}}
-  th{{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}}
-  td.cid{{font-family:var(--mono);font-size:12px;white-space:nowrap}}
+  th,td{{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:middle}}
+  th{{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-mute)}}
+  tbody tr:hover{{background:var(--grid)}}
+  td.cid{{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--ink-soft)}}
   td.rate{{white-space:nowrap}}
   td.tiers{{white-space:nowrap}}
-  .tb{{display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);
+  .tb{{display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--ink-mute);
        border:1px solid var(--line);border-radius:3px;padding:0 4px;margin-right:2px}}
-  .pflag{{font-size:11px;color:var(--warn);border:1px solid #e6cf87;border-radius:3px;
+  .pflag{{font-size:11px;color:var(--warn);border:1px solid var(--warn);border-radius:3px;
        padding:0 4px;margin-left:4px;white-space:nowrap}}
   .bar{{position:relative;display:inline-block;background:var(--grid);border-radius:3px;
        height:16px;vertical-align:middle}}
   .bar > span{{position:absolute;left:0;top:0;bottom:0;background:var(--pass);border-radius:3px}}
-  .bar > .whisker{{position:absolute;top:50%;height:1px;background:var(--ink-soft);opacity:.7}}
+  .bar > .whisker{{position:absolute;top:50%;height:1px;background:var(--ink-mute);opacity:.7}}
   .bar > .whisker::before,.bar > .whisker::after{{content:"";position:absolute;top:-3px;
-       width:1px;height:7px;background:var(--ink-soft);opacity:.7}}
+       width:1px;height:7px;background:var(--ink-mute);opacity:.7}}
   .bar > .whisker::before{{left:0}} .bar > .whisker::after{{right:0}}
-  .pct{{font-variant-numeric:tabular-nums;font-size:12px;color:var(--ink-soft)}}
+  .pct{{font-variant-numeric:tabular-nums;font-size:12px;color:var(--ink-mute)}}
   .low span{{background:var(--fail)}} .mid span{{background:var(--warn)}}
-  tr.excluded td{{color:var(--ink-soft);background:#fafafb}}
+  tr.excluded td{{color:var(--ink-mute);background:transparent}}
 
-  .tierbars{{display:grid;gap:8px;max-width:560px}}
+  .tierbars{{display:grid;gap:9px;max-width:560px}}
   .tierbars .row{{display:grid;grid-template-columns:150px 1fr 54px;align-items:center;gap:10px;font-size:13px}}
   .tierbars .track{{background:var(--grid);border-radius:3px;height:18px;position:relative}}
-  .tierbars .track > span{{position:absolute;left:0;top:0;bottom:0;background:var(--pass);border-radius:3px}}
+  .tierbars .track > span{{position:absolute;left:0;top:0;bottom:0;border-radius:3px;
+       background:linear-gradient(90deg,var(--seq-300),var(--seq-500))}}
 
-  .callout{{background:#fbf5ec;border:1px solid #e6cf87;border-left:3px solid var(--warn);
-       border-radius:6px;padding:14px 16px;font-size:13.5px}}
-  .callout strong{{display:block;margin-bottom:4px}}
-  .callout ul{{margin:8px 0 0;padding-left:20px}} .callout li{{margin:3px 0}}
+  .callout{{background:color-mix(in srgb, var(--warn) 12%, var(--panel));
+       border:1px solid color-mix(in srgb, var(--warn) 45%, var(--line));
+       border-left:3px solid var(--warn);
+       border-radius:8px;padding:15px 17px;font-size:13.5px}}
+  .callout strong{{display:block;margin-bottom:5px;font-size:14px}}
+  .callout ul{{margin:8px 0 0;padding-left:20px}} .callout li{{margin:4px 0}}
 
-  .good{{background:#f2f8f5;border:1px solid #cfe6db;border-left:3px solid var(--pass);
-       border-radius:6px;padding:14px 16px;font-size:13.5px}}
+  .good{{background:color-mix(in srgb, var(--pass) 10%, var(--panel));
+       border:1px solid color-mix(in srgb, var(--pass) 35%, var(--line));
+       border-left:3px solid var(--pass);
+       border-radius:8px;padding:15px 17px;font-size:13.5px}}
 
-  details.xcript{{background:var(--panel);border:1px solid var(--line);border-radius:6px;
-       padding:8px 12px;margin-bottom:8px;font-size:13px}}
-  details.xcript summary{{cursor:pointer}}
+  details.xcript{{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+       padding:9px 13px;margin-bottom:9px;font-size:13px}}
+  details.xcript summary{{cursor:pointer;font-weight:600}}
   details.xcript .xl{{font-size:11px;text-transform:uppercase;letter-spacing:.06em;
-       color:var(--ink-soft);margin:10px 0 3px}}
-  details.xcript pre{{background:#f2f3f5;border:1px solid var(--line);border-radius:4px;
-       padding:8px 10px;font-size:12px;white-space:pre-wrap;overflow-x:auto;margin:0}}
+       color:var(--ink-mute);margin:10px 0 3px}}
+  details.xcript pre{{background:var(--grid);border:1px solid var(--line);border-radius:5px;
+       padding:9px 11px;font-size:12px;white-space:pre-wrap;overflow-x:auto;margin:0}}
 
-  .limits{{background:#fbfbfc;border:1px solid var(--line);border-left:3px solid var(--warn);
-       border-radius:6px;padding:14px 16px}}
+  .limits{{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--ink-mute);
+       border-radius:8px;padding:15px 17px}}
   .limits ul{{margin:8px 0 0;padding-left:20px}} .limits li{{margin:4px 0;font-size:13px}}
 
-  footer{{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);
-       font-size:13px;color:var(--ink-soft)}}
+  footer{{margin-top:52px;padding-top:18px;border-top:1px solid var(--line);
+       font-size:13px;color:var(--ink-mute)}}
   @media(max-width:640px){{
     .tiles{{grid-template-columns:1fr 1fr}} .cards{{grid-template-columns:1fr}}
     .tierbars .row{{grid-template-columns:110px 1fr 46px}}
@@ -351,9 +396,11 @@ def build() -> str:
 <div class="wrap">
 
   <header>
-    <h1>spec-conformance-evals</h1>
-    <p class="tag">Does the system do what its spec says &mdash; measurably, with the receipts.</p>
-    <span class="status">5 runs complete &middot; Model Spec {esc(s5["run_date"])} (hardened, {s5["cases"]} cases) &middot; read-only agent {esc(rra4["run_date"])}</span>
+    <div class="inner">
+      <h1>spec-conformance-evals</h1>
+      <p class="tag">Does the system do what its spec says &mdash; measurably, with the receipts.</p>
+      <span class="status">5 runs complete &middot; Model Spec {esc(s5["run_date"])} (hardened, {s5["cases"]} cases) &middot; read-only agent {esc(rra4["run_date"])}</span>
+    </div>
   </header>
 
   <section>
