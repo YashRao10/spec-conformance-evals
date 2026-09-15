@@ -353,6 +353,8 @@ def build() -> str:
   .status{{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;
        text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.14);color:#fff;
        border:1px solid rgba(255,255,255,.22);padding:5px 10px;border-radius:20px}}
+  header .baseline-note{{display:block;margin-top:12px;font-family:var(--mono);font-size:11.5px;
+       color:rgba(255,255,255,.62);max-width:560px}}
   .lbl{{font-size:11px;text-transform:uppercase;letter-spacing:.08em;
        color:var(--ink-mute);font-weight:700}}
 
@@ -460,6 +462,7 @@ def build() -> str:
       <h1>spec-conformance-evals</h1>
       <p class="tag">Does the system do what its spec says &mdash; measurably, with the receipts.</p>
       <span class="status">5 runs complete &middot; Model Spec {esc(s5["run_date"])} (hardened, {s5["cases"]} cases) &middot; read-only agent {esc(rra4["run_date"])}</span>
+      <span class="baseline-note">Results below are an economy-tier baseline (subject: {esc(s5["subject_model"])}, grader: {esc(s5["grader_model"])}) &mdash; a frontier-model re-run is the next planned step, not yet done.</span>
     </div>
   </header>
 
