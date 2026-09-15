@@ -14,8 +14,10 @@ Output:
   docs/index.html
 
 The page is deliberately a different visual register from the portfolio's dark
-compliance-doc set: light, results-forward, benchmark-scorecard. No build step,
-no JS, no external assets -- open the file or serve docs/ as Pages.
+compliance-doc set: results-forward benchmark scorecard with editorial
+typography (Google Fonts: Newsreader + IBM Plex Mono) and a light/dark theme.
+No build step, no runtime JS (by design -- see git history for the discussion) --
+open the file or serve docs/ as Pages.
 """
 
 from __future__ import annotations
@@ -287,7 +289,33 @@ def build() -> str:
   *{{box-sizing:border-box}}
   body{{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
        line-height:1.55;font-size:15px}}
-  .wrap{{max-width:1040px;margin:0 auto;padding:0 20px 80px}}
+
+  .starfield{{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+       opacity:.5}}
+  .starfield::before,.starfield::after{{content:"";position:absolute;inset:-10%;
+       background-repeat:repeat;
+       background-image:
+         radial-gradient(1.3px 1.3px at 40px 60px, var(--ink-mute) 55%, transparent 100%),
+         radial-gradient(1px 1px at 140px 170px, var(--ink-mute) 55%, transparent 100%),
+         radial-gradient(1.6px 1.6px at 230px 40px, var(--ink-mute) 55%, transparent 100%),
+         radial-gradient(1px 1px at 300px 220px, var(--ink-mute) 55%, transparent 100%),
+         radial-gradient(1.3px 1.3px at 360px 100px, var(--ink-mute) 55%, transparent 100%),
+         radial-gradient(1px 1px at 420px 260px, var(--ink-mute) 55%, transparent 100%),
+         radial-gradient(1.6px 1.6px at 80px 300px, var(--ink-mute) 55%, transparent 100%),
+         radial-gradient(1px 1px at 470px 30px, var(--ink-mute) 55%, transparent 100%);
+       background-size:500px 340px}}
+  .starfield::after{{background-size:700px 480px;background-position:120px 90px;opacity:.6}}
+  @media (prefers-color-scheme: dark){{
+    :root:not([data-theme="light"]) .starfield{{opacity:1}}
+  }}
+  :root[data-theme="dark"] .starfield{{opacity:1}}
+  @media (prefers-reduced-motion: no-preference){{
+    .starfield::before{{animation:star-drift 210s linear infinite}}
+    .starfield::after{{animation:star-drift 340s linear infinite reverse}}
+  }}
+  @keyframes star-drift{{from{{transform:translate3d(0,0,0)}}to{{transform:translate3d(-500px,-340px,0)}}}}
+
+  .wrap{{max-width:1040px;margin:0 auto;padding:0 20px 80px;position:relative;z-index:1}}
   a{{color:var(--accent);text-decoration:none}} a:hover{{text-decoration:underline}}
   code{{font-family:var(--mono);font-size:.9em}}
 
@@ -402,6 +430,7 @@ def build() -> str:
 </style>
 </head>
 <body>
+<div class="starfield" aria-hidden="true"></div>
 <div class="wrap">
 
   <header>
