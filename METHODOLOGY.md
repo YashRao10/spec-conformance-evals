@@ -29,7 +29,7 @@ Out of scope:
 ### 2.1 Spec ingestion and clause extraction
 
 Take the target's specification **verbatim**. Decompose it into numbered
-**normative clauses** — each discrete "must / must not / always / never / only /
+**normative clauses**, each discrete "must / must not / always / never / only /
 should" statement. Record each in a clause table:
 
 | clause_id | text (verbatim or tight paraphrase) | type | testable? | notes |
@@ -41,19 +41,19 @@ should" statement. Record each in a clause table:
 is a documented judgment call, not a claim that the decomposition is complete or
 canonical. The verbatim spec text and the table live in `specs/<target>.md`.
 
-### 2.2 Case authoring — three difficulty tiers
+### 2.2 Case authoring: three difficulty tiers
 
 For each testable clause, author cases at up to three tiers:
 
 | Tier | Definition | Purpose |
 |---|---|---|
-| **T1 — plain** | An unambiguous scenario that should obviously invoke the clause. | Baseline: does the model comply at all. |
-| **T2 — realistic** | A naturalistic prompt where the clause applies but is not signposted. | "Deployment-like conditions" (NIST MEASURE 2.3). |
-| **T3 — pressure** | A benign competing incentive, a distractor, mild time pressure, or a plausible reason to cut the corner. **Not** a jailbreak or injection. | Does the clause hold when something pulls against it. |
+| **T1: plain** | An unambiguous scenario that should obviously invoke the clause. | Baseline: does the model comply at all. |
+| **T2: realistic** | A naturalistic prompt where the clause applies but is not signposted. | "Deployment-like conditions" (NIST MEASURE 2.3). |
+| **T3: pressure** | A benign competing incentive, a distractor, mild time pressure, or a plausible reason to cut the corner. **Not** a jailbreak or injection. | Does the clause hold when something pulls against it. |
 
 Target 2–4 cases per clause. Every case record carries `clause_id` and `tier`.
 
-### 2.3 Grading — lightest method that works
+### 2.3 Grading: lightest method that works
 
 | Output shape | Scorer |
 |---|---|
@@ -76,7 +76,7 @@ For every rubric graded by an LLM judge:
 1. Hand-grade a random sample of ≥ 20% of that rubric's case-runs.
 2. Report judge-vs-human agreement: raw agreement % and Cohen's κ.
 3. If κ is below 0.6 (substantial agreement), treat the **rubric** as the
-   defect — revise it and re-check. Do not publish a number from an unreliable
+   defect; revise it and re-check. Do not publish a number from an unreliable
    rubric.
 
 This is the check that turns "I asked a model to grade it" into a defensible
@@ -122,7 +122,7 @@ NIST AI RMF) shares this section.
 | Requirements (HLR / LLR) | normative clauses extracted from the spec |
 | Requirement-to-test traceability (RTM) | `clause_id` on every case; the coverage table |
 | Requirement coverage | clause coverage (§3) |
-| Structural coverage (statement / MC/DC) | *no analogue* — model internals are not instrumented; tier coverage is a weak substitute, and this limitation is stated, not papered over |
+| Structural coverage (statement / MC/DC) | *no analogue*: model internals are not instrumented; tier coverage is a weak substitute, and this limitation is stated, not papered over |
 | Robustness / range testing | the T3 tier |
 | Tool qualification data package | this document + the reproducible harness + result exports |
 
