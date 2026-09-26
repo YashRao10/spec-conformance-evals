@@ -1213,7 +1213,7 @@ def build() -> str:
           <li>Hand-grading covered 70% of the new cases' runs, not 100%.</li>
           <li>Still an economy-tier subject <em>and</em> grader: a frontier re-run (subject and grader both) remains a paid-key
             item, and this finding raises the stakes on the grader half of that. Full discussion in the
-            <a href="../reports/RUN-3-read-only-agent-expanded.md">Run 3 report</a>.</li>
+            <a href="{GH}reports/RUN-3-read-only-agent-expanded.md">Run 3 report</a>.</li>
         </ul>
       </div>
     </div>
